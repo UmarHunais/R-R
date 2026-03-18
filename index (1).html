@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R&R Sweet &amp; Savoury</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- ===================== STYLES ===================== -->
+  <style>
+    /* ---- Reset & Base ---- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ---- CSS Variables ---- */
+    :root {
+      --cream:      #FAF7F2;
+      --cream-dark: #F0EBE1;
+      --beige:      #E8DDD0;
+      --brown:      #A07850;
+      --brown-dark: #7A5C38;
+      --red:        #8B2020;
+      --red-dark:   #6E1818;
+      --text:       #2A2220;
+      --text-mid:   #5C4A42;
+      --text-light: #9C8A82;
+      --white:      #FFFFFF;
+      --border:     #DDD5C8;
+
+      --font-head: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+
+      --radius: 4px;
+      --radius-lg: 10px;
+      --shadow: 0 2px 16px rgba(42,34,32,0.08);
+      --shadow-hover: 0 6px 28px rgba(42,34,32,0.14);
+
+      --nav-h: 68px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    img { display: block; width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ---- Utility ---- */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brown);
+      display: block;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .section-subtitle {
+      margin-top: 14px;
+      font-size: 17px;
+      color: var(--text-mid);
+      max-width: 560px;
+      font-weight: 300;
+    }
+    .btn {
+      display: inline-block;
+      padding: 13px 32px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: var(--red);
+      color: var(--white);
+    }
+    .btn-primary:hover { background: var(--red-dark); box-shadow: 0 4px 16px rgba(139,32,32,0.3); }
+    .btn-outline {
+      background: transparent;
+      color: var(--red);
+      border: 1.5px solid var(--red);
+    }
+    .btn-outline:hover { background: var(--red); color: var(--white); }
+
+    /* ===================== NAVBAR ===================== */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(250,247,242,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+    #navbar.scrolled { box-shadow: var(--shadow); }
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .nav-logo span { color: var(--red); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-mid);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--red); }
+    .nav-cta { margin-left: 12px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      padding: 24px;
+      z-index: 999;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-mid);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--beige);
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    /* ===================== HERO ===================== */
+    #hero {
+      padding-top: calc(var(--nav-h) + 80px);
+      padding-bottom: 100px;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    /* subtle decorative circle */
+    #hero::before {
+      content: '';
+      position: absolute;
+      right: -200px;
+      top: -100px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #E8DDD0 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--beige);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--brown-dark);
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+    .hero-badge::before {
+      content: '●';
+      color: var(--red);
+      font-size: 8px;
+    }
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(2.6rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--red);
+    }
+    .hero-tagline {
+      font-family: var(--font-head);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      font-style: italic;
+      color: var(--brown);
+      margin-bottom: 20px;
+    }
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-mid);
+      font-weight: 300;
+      max-width: 480px;
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .hero-trust {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .trust-item { text-align: left; }
+    .trust-num {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .trust-label {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .hero-image {
+      position: relative;
+    }
+    .hero-img-main {
+      border-radius: var(--radius-lg);
+      height: 500px;
+      object-fit: cover;
+      box-shadow: var(--shadow-hover);
+    }
+    .hero-img-float {
+      position: absolute;
+      bottom: -30px;
+      left: -30px;
+      width: 180px;
+      height: 180px;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      border: 4px solid var(--white);
+      box-shadow: var(--shadow-hover);
+    }
+    .hero-tag-float {
+      position: absolute;
+      top: 24px;
+      right: -16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .hero-tag-float .emoji { font-size: 1.4rem; }
+    .hero-tag-float p { font-size: 12px; font-weight: 600; color: var(--text); margin-top: 4px; }
+
+    /* ===================== ABOUT ===================== */
+    #about {
+      padding: 100px 0;
+      background: var(--cream-dark);
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-imgs {
+      position: relative;
+      height: 460px;
+    }
+    .about-img-big {
+      position: absolute;
+      top: 0; left: 0;
+      width: 75%;
+      height: 380px;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+    .about-img-sm {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 55%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      border: 4px solid var(--cream-dark);
+      box-shadow: var(--shadow-hover);
+    }
+    .about-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+    .pill {
+      background: var(--beige);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brown-dark);
+    }
+    .pill.red { background: #F9EDED; border-color: #E0B8B8; color: var(--red-dark); }
+    .about-text p {
+      color: var(--text-mid);
+      font-weight: 300;
+      font-size: 16px;
+      margin-top: 20px;
+      line-height: 1.85;
+    }
+
+    /* ===================== MENU ===================== */
+    #menu {
+      padding: 100px 0;
+      background: var(--cream);
+    }
+    .menu-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .menu-header .section-subtitle { margin: 14px auto 0; }
+    .menu-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .menu-tab {
+      padding: 10px 28px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-mid);
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+    .menu-tab:hover { border-color: var(--brown); color: var(--brown); }
+    .menu-tab.active { background: var(--red); border-color: var(--red); color: var(--white); }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 28px;
+    }
+    .menu-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .menu-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .menu-card-img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+    }
+    .menu-card-body { padding: 18px 20px 20px; }
+    .menu-card-name {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .menu-card-desc {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 14px;
+      font-weight: 400;
+    }
+    .menu-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .menu-card-price {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--red);
+    }
+    .btn-order {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-order:hover { background: var(--red-dark); }
+    .btn-order:active { transform: scale(0.96); }
+
+    /* Hidden category panels */
+    .menu-panel { display: none; }
+    .menu-panel.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 28px; }
+
+    /* ===================== GALLERY ===================== */
+    #gallery {
+      padding: 100px 0;
+      background: var(--cream-dark);
+    }
+    .gallery-header { margin-bottom: 48px; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 220px;
+      gap: 14px;
+    }
+    .gallery-item { overflow: hidden; border-radius: var(--radius-lg); }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-item:nth-child(1) { grid-column: span 5; grid-row: span 2; }
+    .gallery-item:nth-child(2) { grid-column: span 4; }
+    .gallery-item:nth-child(3) { grid-column: span 3; }
+    .gallery-item:nth-child(4) { grid-column: span 4; }
+    .gallery-item:nth-child(5) { grid-column: span 3; }
+    .gallery-item:nth-child(6) { grid-column: span 5; }
+    .gallery-item:nth-child(7) { grid-column: span 4; }
+    .gallery-item:nth-child(8) { grid-column: span 3; }
+
+    /* ===================== CONTACT ===================== */
+    #contact {
+      padding: 100px 0;
+      background: var(--cream);
+    }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .contact-info .section-title { margin-bottom: 24px; }
+    .contact-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+    .contact-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--beige);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-item-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brown);
+      margin-bottom: 3px;
+    }
+    .contact-item-value {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 400;
+    }
+    .contact-whatsapp {
+      margin-top: 32px;
+    }
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: white;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .whatsapp-btn:hover { background: #1DAA54; box-shadow: 0 4px 16px rgba(37,211,102,0.35); }
+    .contact-form-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+    .contact-form-box h3 {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .contact-form-box p {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 28px;
+    }
+    /* reuse modal form styles */
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--cream);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--brown); background: var(--white); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    /* ===================== FOOTER ===================== */
+    #footer {
+      background: var(--text);
+      color: var(--beige);
+      padding: 56px 0 36px;
+    }
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-logo {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .footer-logo span { color: #E07070; }
+    .footer-desc {
+      font-size: 14px;
+      color: #9C8A82;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 300px;
+    }
+    .footer-col h4 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brown);
+      margin-bottom: 18px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #9C8A82;
+    }
+    .footer-col ul li a { color: #9C8A82; transition: color 0.2s; }
+    .footer-col ul li a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid #3C3432;
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p { font-size: 13px; color: #6C5C58; }
+
+    /* ===================== ORDER MODAL ===================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(42,34,32,0.55);
+      backdrop-filter: blur(3px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(42,34,32,0.25);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--beige);
+      border: none;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text);
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal-header { margin-bottom: 8px; }
+    .modal-item-name {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .modal-item-price {
+      font-size: 14px;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .modal-submit {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-image { order: -1; }
+      .hero-img-main { height: 340px; }
+      .hero-img-float { display: none; }
+      .hero-tag-float { right: 12px; top: 12px; }
+
+      .about-inner { grid-template-columns: 1fr; }
+      .about-imgs { height: 300px; }
+
+      .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+
+      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+
+      .gallery-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 160px;
+      }
+      .gallery-item:nth-child(1) { grid-column: span 6; grid-row: span 1; }
+      .gallery-item:nth-child(2) { grid-column: span 3; }
+      .gallery-item:nth-child(3) { grid-column: span 3; }
+      .gallery-item:nth-child(4) { grid-column: span 3; }
+      .gallery-item:nth-child(5) { grid-column: span 3; }
+      .gallery-item:nth-child(6) { grid-column: span 6; }
+      .gallery-item:nth-child(7) { grid-column: span 3; }
+      .gallery-item:nth-child(8) { grid-column: span 3; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-trust { gap: 20px; }
+      .contact-form-box { padding: 28px 20px; }
+      .modal { padding: 28px 20px; }
+      .menu-panel.active { grid-template-columns: 1fr 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 400px) {
+      .menu-panel.active { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <a href="#hero" class="nav-logo">R<span>&amp;</span>R Sweet &amp; Savoury</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li class="nav-cta"><a href="#menu" class="btn btn-primary">Order Now</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#about"   onclick="closeMobileNav()">About</a>
+    <a href="#menu"    onclick="closeMobileNav()">Menu</a>
+    <a href="#gallery" onclick="closeMobileNav()">Gallery</a>
+    <a href="#contact" onclick="closeMobileNav()">Contact</a>
+    <a href="#menu" class="btn btn-primary" style="text-align:center;" onclick="closeMobileNav()">Order Now</a>
+  </div>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="hero">
+    <div class="container hero-inner">
+
+      <div class="hero-content">
+        <div class="hero-badge">Home-Based · Colombo, Sri Lanka</div>
+        <h1 class="hero-title">R<em>&amp;</em>R<br>Sweet &amp; Savoury</h1>
+        <p class="hero-tagline">"Quality short eats for affordable prices"</p>
+        <p class="hero-desc">
+          Freshly handcrafted short eats and baked treats made with love from our home kitchen in Colombo. 
+          Every bite is made to order — halal certified, packed with flavour, delivered to your door.
+        </p>
+        <div class="hero-actions">
+          <a href="#menu" class="btn btn-primary">View Menu</a>
+          <a href="https://wa.me/94778502118" class="btn btn-outline" target="_blank">Chat on WhatsApp</a>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-item">
+            <div class="trust-num">100%</div>
+            <div class="trust-label">Halal Certified</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-num">Fresh</div>
+            <div class="trust-label">Made to Order</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-num">Bulk</div>
+            <div class="trust-label">Orders Welcome</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <img class="hero-img-main"
+             src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&q=80"
+             alt="Assorted baked short eats" />
+        <img class="hero-img-float"
+             src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&q=80"
+             alt="Fresh cookies" />
+        <div class="hero-tag-float">
+          <div class="emoji">🏠</div>
+          <p>Home-Made<br>with Love</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about">
+    <div class="container about-inner">
+
+      <div class="about-imgs">
+        <img class="about-img-big"
+             src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=600&q=80"
+             alt="Short eats tray" />
+        <img class="about-img-sm"
+             src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=400&q=80"
+             alt="Baked goods close up" />
+      </div>
+
+      <div class="about-text">
+        <span class="section-label">Our Story</span>
+        <h2 class="section-title">A Home Kitchen<br>Built on Flavour</h2>
+        <p>
+          R&R Sweet &amp; Savoury started as a labour of love — a home kitchen in Colombo where passion for food 
+          meets the warmth of Sri Lankan hospitality. Every patty, roll, tart, and cookie is carefully 
+          prepared fresh, using quality ingredients and time-honoured recipes.
+        </p>
+        <p>
+          We cater to families, offices, events, and parties across Colombo. Whether you need a dozen 
+          fish rolls for a quick snack or 200 assorted short eats for a wedding reception — we've got you covered.
+        </p>
+        <div class="about-pills">
+          <span class="pill red">✔ Halal Certified</span>
+          <span class="pill">🎉 Bulk &amp; Party Orders</span>
+          <span class="pill">🚚 Colombo Delivery</span>
+          <span class="pill">🍳 Freshly Made</span>
+          <span class="pill">🏠 Home-Based Kitchen</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== MENU ===================== -->
+  <section id="menu">
+    <div class="container">
+
+      <div class="menu-header">
+        <span class="section-label">What We Offer</span>
+        <h2 class="section-title">Our Menu</h2>
+        <p class="section-subtitle">Made fresh to order. Prices are per piece. Bulk discounts available — ask us on WhatsApp.</p>
+      </div>
+
+      <div class="menu-tabs">
+        <button class="menu-tab active" data-tab="savoury">🧆 Savoury</button>
+        <button class="menu-tab"        data-tab="sweet">🍰 Sweet</button>
+      </div>
+
+      <!-- SAVOURY -->
+      <div class="menu-panel active" id="tab-savoury">
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=75" alt="Patties" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Patties</div>
+            <div class="menu-card-desc">Fish · Chicken · Beef — golden flaky pastry</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 80</span>
+              <button class="btn-order" onclick="openModal('Patties','LKR 80')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=400&q=75" alt="Rolls" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Rolls</div>
+            <div class="menu-card-desc">Fish · Chicken · Beef — crispy &amp; spiced</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 80</span>
+              <button class="btn-order" onclick="openModal('Rolls','LKR 80')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=75" alt="Buns" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Buns</div>
+            <div class="menu-card-desc">Fish · Chicken · Beef — soft &amp; fluffy</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 100</span>
+              <button class="btn-order" onclick="openModal('Buns','LKR 100')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1620414543945-fd19aa7f5607?w=400&q=75" alt="Chicken Pie" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Chicken Pie</div>
+            <div class="menu-card-desc">Creamy chicken filling in a buttery crust</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 150</span>
+              <button class="btn-order" onclick="openModal('Chicken Pie','LKR 150')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=75" alt="Mini Pizza" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Mini Pizza</div>
+            <div class="menu-card-desc">Tomato, cheese &amp; toppings on soft base</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 130</span>
+              <button class="btn-order" onclick="openModal('Mini Pizza','LKR 130')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=75" alt="Pastry" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Pastry</div>
+            <div class="menu-card-desc">Flaky shortcrust with savoury filling</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 90</span>
+              <button class="btn-order" onclick="openModal('Pastry','LKR 90')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1630024963-3e92aeee5492?w=400&q=75" alt="Samosa" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Samosa</div>
+            <div class="menu-card-desc">Crispy triangles with spiced veggie/meat</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 70</span>
+              <button class="btn-order" onclick="openModal('Samosa','LKR 70')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=75" alt="Pizza Roll" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Pizza Roll</div>
+            <div class="menu-card-desc">Rolled dough with pizza-style filling</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 120</span>
+              <button class="btn-order" onclick="openModal('Pizza Roll','LKR 120')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400&q=75" alt="Cutlet" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Cutlet</div>
+            <div class="menu-card-desc">Breaded &amp; fried with a spiced centre</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 75</span>
+              <button class="btn-order" onclick="openModal('Cutlet','LKR 75')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end savoury panel -->
+
+      <!-- SWEET -->
+      <div class="menu-panel" id="tab-sweet">
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1559620192-032c4bc4674e?w=400&q=75" alt="Jam Tart" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Jam Tart</div>
+            <div class="menu-card-desc">Buttery shell filled with sweet fruit jam</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 60</span>
+              <button class="btn-order" onclick="openModal('Jam Tart','LKR 60')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=400&q=75" alt="Almond Tart" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Almond Tart</div>
+            <div class="menu-card-desc">Rich frangipane with toasted almonds</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 90</span>
+              <button class="btn-order" onclick="openModal('Almond Tart','LKR 90')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=75" alt="Cheesecake" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Cheesecake</div>
+            <div class="menu-card-desc">Creamy classic on a biscuit base</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 200</span>
+              <button class="btn-order" onclick="openModal('Cheesecake','LKR 200')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=75" alt="Brownies" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Brownies</div>
+            <div class="menu-card-desc">Fudgy dark chocolate squares</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 120</span>
+              <button class="btn-order" onclick="openModal('Brownies','LKR 120')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&q=75" alt="Chocolate Tart" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Chocolate Tart</div>
+            <div class="menu-card-desc">Silky ganache in a crisp pastry shell</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 100</span>
+              <button class="btn-order" onclick="openModal('Chocolate Tart','LKR 100')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1548365328-8c6db3220e4c?w=400&q=75" alt="Peanut Cookies" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Peanut Cookies</div>
+            <div class="menu-card-desc">Crunchy, nutty, perfectly sweet</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 50</span>
+              <button class="btn-order" onclick="openModal('Peanut Cookies','LKR 50')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=400&q=75" alt="Gulab Jamun" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Gulab Jamun</div>
+            <div class="menu-card-desc">Soft milk dumplings in rose syrup</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 55</span>
+              <button class="btn-order" onclick="openModal('Gulab Jamun','LKR 55')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400&q=75" alt="Chocolate Chip Cookies" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Choc Chip Cookies</div>
+            <div class="menu-card-desc">Chewy, chunky &amp; full of chocolate chips</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 70</span>
+              <button class="btn-order" onclick="openModal('Chocolate Chip Cookies','LKR 70')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <img class="menu-card-img" src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=75" alt="Doughnut" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">Doughnut</div>
+            <div class="menu-card-desc">Glazed &amp; fluffy homemade doughnuts</div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">LKR 90</span>
+              <button class="btn-order" onclick="openModal('Doughnut','LKR 90')">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end sweet panel -->
+
+    </div>
+  </section>
+
+  <!-- ===================== GALLERY ===================== -->
+  <section id="gallery">
+    <div class="container">
+      <div class="gallery-header">
+        <span class="section-label">Fresh from Our Kitchen</span>
+        <h2 class="section-title">A Taste of What<br>We Make</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&q=80" alt="Baked goods" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=75" alt="Cookies" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=400&q=75" alt="Cakes" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=500&q=75" alt="Chocolate tart" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=75" alt="Mini pizza" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=75" alt="Brownies" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=500&q=75" alt="Sweet treats" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=400&q=75" alt="Gulab jamun" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact">
+    <div class="container contact-inner">
+
+      <div class="contact-info">
+        <span class="section-label">Get in Touch</span>
+        <h2 class="section-title">Ready to Order?<br>Let's Talk.</h2>
+        <p class="section-subtitle" style="margin-bottom:40px;">
+          Place an order, ask about bulk pricing, or enquire about party packages. We respond quickly on WhatsApp.
+        </p>
+
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-item-label">Phone / WhatsApp</div>
+            <div class="contact-item-value">077 850 2118</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-item-label">Location</div>
+            <div class="contact-item-value">Colombo, Sri Lanka<br><small style="color:var(--text-light)">Delivery within Colombo &amp; suburbs</small></div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <div class="contact-item-label">Order Lead Time</div>
+            <div class="contact-item-value">Orders placed 1 day in advance<br><small style="color:var(--text-light)">Bulk orders: 2–3 days notice</small></div>
+          </div>
+        </div>
+
+        <div class="contact-whatsapp">
+          <a href="https://wa.me/94778502118?text=Hi%20R%26R%20Sweet%20%26%20Savoury!%20I'd%20like%20to%20place%20an%20order."
+             class="whatsapp-btn" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-form-box">
+        <h3>Send an Enquiry</h3>
+        <p>Fill in your details and we'll get back to you via WhatsApp.</p>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="eq-name" placeholder="e.g. Fatima Hassan" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="eq-phone" placeholder="07X XXX XXXX" />
+        </div>
+        <div class="form-group">
+          <label>Delivery Area</label>
+          <input type="text" id="eq-area" placeholder="e.g. Dehiwala, Colombo 6" />
+        </div>
+        <div class="form-group">
+          <label>Your Message / Order Details</label>
+          <textarea id="eq-msg" placeholder="E.g. 50 fish patties, 30 chicken rolls for Saturday…"></textarea>
+        </div>
+        <button class="btn btn-primary modal-submit" onclick="sendEnquiry()">Send via WhatsApp</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">R<span>&amp;</span>R Sweet &amp; Savoury</div>
+          <p class="footer-desc">
+            Home-made short eats &amp; baked treats crafted with care in Colombo, Sri Lanka.
+            Halal certified. Fresh to order. Delivered with love.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li>📞 077 850 2118</li>
+            <li>📍 Colombo, Sri Lanka</li>
+            <li>💬 WhatsApp Orders Welcome</li>
+            <li>🕌 Halal Certified</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 R&amp;R Sweet &amp; Savoury. All rights reserved.</p>
+        <p>Made with ❤️ in Colombo, Sri Lanka</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== ORDER MODAL ===================== -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-header">
+        <div class="modal-item-name" id="modal-item-name">Item Name</div>
+        <div class="modal-item-price" id="modal-item-price">LKR 0</div>
+      </div>
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="m-name" placeholder="e.g. Amara Perera" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="m-phone" placeholder="07X XXX XXXX" />
+      </div>
+      <div class="form-group">
+        <label>Delivery Address *</label>
+        <input type="text" id="m-address" placeholder="Street, Area, City" />
+      </div>
+      <div class="form-group">
+        <label>Quantity *</label>
+        <input type="number" id="m-qty" placeholder="e.g. 10" min="1" />
+      </div>
+      <div class="form-group">
+        <label>Filling / Variant (optional)</label>
+        <input type="text" id="m-variant" placeholder="e.g. Fish, or half fish half chicken" />
+      </div>
+      <div class="form-group">
+        <label>Additional Notes (optional)</label>
+        <textarea id="m-note" placeholder="Delivery date, special requests, etc."></textarea>
+      </div>
+      <button class="btn btn-primary modal-submit" onclick="submitOrder()">
+        <span>📲</span> Place Order via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== JAVASCRIPT ===================== -->
+  <script>
+    /* ---- Navbar scroll effect ---- */
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    /* ---- Mobile nav toggle ---- */
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+    function closeMobileNav() {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+    }
+
+    /* ---- Menu Tabs ---- */
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update tab buttons
+        document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show correct panel
+        const target = tab.dataset.tab;
+        document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('tab-' + target).classList.add('active');
+      });
+    });
+
+    /* ---- Modal State ---- */
+    let currentItem = '';
+    let currentPrice = '';
+
+    function openModal(item, price) {
+      currentItem = item;
+      currentPrice = price;
+      document.getElementById('modal-item-name').textContent = item;
+      document.getElementById('modal-item-price').textContent = price + ' per piece';
+      // Clear previous inputs
+      ['m-name','m-phone','m-address','m-qty','m-variant','m-note'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('orderModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('orderModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on overlay click
+    document.getElementById('orderModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    /* ---- Submit Order → WhatsApp ---- */
+    function submitOrder() {
+      const name    = document.getElementById('m-name').value.trim();
+      const phone   = document.getElementById('m-phone').value.trim();
+      const address = document.getElementById('m-address').value.trim();
+      const qty     = document.getElementById('m-qty').value.trim();
+      const variant = document.getElementById('m-variant').value.trim();
+      const note    = document.getElementById('m-note').value.trim();
+
+      // Basic validation
+      if (!name || !phone || !address || !qty) {
+        alert('Please fill in all required fields (Name, Phone, Address, Quantity).');
+        return;
+      }
+
+      // Build WhatsApp message
+      let msg = `Hello R&R Sweet & Savoury! 👋\n\n`;
+      msg += `*New Order Request* 🛒\n`;
+      msg += `━━━━━━━━━━━━━━━━\n`;
+      msg += `*Item:* ${currentItem}\n`;
+      msg += `*Price:* ${currentPrice} per piece\n`;
+      msg += `*Quantity:* ${qty}\n`;
+      if (variant) msg += `*Variant/Filling:* ${variant}\n`;
+      msg += `━━━━━━━━━━━━━━━━\n`;
+      msg += `*Customer Details:*\n`;
+      msg += `Name: ${name}\n`;
+      msg += `Phone: ${phone}\n`;
+      msg += `Address: ${address}\n`;
+      if (note) msg += `Notes: ${note}\n`;
+      msg += `━━━━━━━━━━━━━━━━\n`;
+      msg += `Please confirm availability and delivery details. Thank you! 😊`;
+
+      const encoded = encodeURIComponent(msg);
+      const url = `https://wa.me/94778502118?text=${encoded}`;
+      window.open(url, '_blank');
+      closeModal();
+    }
+
+    /* ---- Send Enquiry (Contact Section) ---- */
+    function sendEnquiry() {
+      const name  = document.getElementById('eq-name').value.trim();
+      const phone = document.getElementById('eq-phone').value.trim();
+      const area  = document.getElementById('eq-area').value.trim();
+      const msg   = document.getElementById('eq-msg').value.trim();
+
+      if (!name || !msg) {
+        alert('Please enter at least your name and message.');
+        return;
+      }
+
+      let text = `Hello R&R Sweet & Savoury! 👋\n\n`;
+      text += `*Enquiry from Website*\n`;
+      text += `━━━━━━━━━━━━━━━━\n`;
+      if (name)  text += `Name: ${name}\n`;
+      if (phone) text += `Phone: ${phone}\n`;
+      if (area)  text += `Area: ${area}\n`;
+      text += `━━━━━━━━━━━━━━━━\n`;
+      text += `Message:\n${msg}`;
+
+      const encoded = encodeURIComponent(text);
+      window.open(`https://wa.me/94778502118?text=${encoded}`, '_blank');
+    }
+
+    /* ---- Close modal on Escape key ---- */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>
